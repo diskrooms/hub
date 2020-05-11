@@ -96,13 +96,15 @@ Page({
             dataType: 'json',
             timeout:2000,
             success: function(res) {
+              let type = (res.data.code == 200) ? 'success' : 'fail'
               dd.showToast({
-                'type':'success',
-                'content':res.msg
+                'type':type,
+                'content':res.data.msg,
+                'duration':2000
               })
             },
             fail: function(res) {
-              console.log(res)
+              //console.log(res)
             },
             complete: function(res) {
               //console.log(res)

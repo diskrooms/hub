@@ -75,7 +75,6 @@
           <view class="col-sm-4">
             <picker class="form-control" name="server-type" onChange="bindPickerChange">
                 <view class="picker">中控服务器</view>
-                <view class="picker">应用服务器</view>
             </picker>
           </view>
         </view>
