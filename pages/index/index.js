@@ -10,7 +10,9 @@ Page({
     listData:[],
     showAuthUser:false, //是否显示授权员工面板
     addAuthUser:false,  //是否显示添加授权员工对话框
-    authorizationUserData:{}      //需要添加授权员工表单数据
+    authorizationUserData:{},      //需要添加授权员工表单数据
+    array:['中控服务器','应用服务器'],
+    index:0
   },
   
   Utils: new Utils(),
@@ -77,8 +79,16 @@ Page({
     this.setData({"showAddServerModal":false})
   },
 
+  //添加服务器时选择服务器类型动作
+  bindPickerChange(e) {
+    this.setData({
+      index: e.detail.value,
+    });
+  },
+
   //执行添加服务器操作
   doAddServer(e){
+    console.log(e)
     let domain = this.data.domain   //页面不销毁 则可以从data中取
     let postData = e.detail.value
     dd.getAuthCode({
@@ -91,7 +101,7 @@ Page({
                   'server_desc':postData['server-desc'],
                   'server_port':postData['server-port'],
                   'server_pwd':postData['server-pwd'],
-                  'server_type':1
+                  'server_type':postData['server-type'],
             },
             dataType: 'json',
             timeout:2000,

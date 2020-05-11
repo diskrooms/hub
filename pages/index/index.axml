@@ -44,7 +44,7 @@
 </view>
 
 <!-- 添加服务器对话框 -->
-<view class="modal-dialog add-modal-dialog  mask" a:if='{{showAddServerModal}}'>
+<view class="modal-dialog add-modal-dialog" a:if='{{showAddServerModal}}'>
   <view class="modal-content">
     <view class="modal-header">
       <button class="close" onTap="closeAddServerModal">×</button>
@@ -73,9 +73,10 @@
         <view class="form-group clearfix">
           <label for="server-type" class="control-label col-sm-2">服务类型:</label>
           <view class="col-sm-4">
-            <picker class="form-control" name="server-type" onChange="bindPickerChange">
-                <view class="picker">中控服务器</view>
+            <picker class="form-control" id="server-type"  onChange="bindPickerChange" value="{{index}}" range="{{array}}">
+                <view class="picker">{{array[index]}}</view>
             </picker>
+            <input type="text" name="server-type" value="{{index+1}}" style="display:none;">
           </view>
         </view>
         <view class="form-group clearfix">
