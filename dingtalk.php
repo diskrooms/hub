@@ -63,8 +63,12 @@ if($opt == 'addServer'){
         'port'=>$server_port
     );
     $servers = array_merge($servers,$add);
-    file_put_contents('../servers.json',json_encode($servers));
-    
+    $res = file_put_contents('../servers.json',json_encode($servers));
+    if($res){
+        ejson(200,[],'添加成功');
+    } else {
+        ejson(197,[],'添加失败');
+    }
 }
 
 if($opt == 'getAuthorizationUsers'){
