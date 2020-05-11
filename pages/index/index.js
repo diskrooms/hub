@@ -78,35 +78,34 @@ Page({
   },
 
   //执行添加服务器操作
-  doAddServer(){
+  doAddServer(e){
+    let domain = this.data.domain   //页面不销毁 则可以从data中取
+    let postData = e.detail.value
     dd.getAuthCode({
         success:function(res){
           let code = res.authCode
-          //测试域名是否部署了服务
           dd.httpRequest({
             url: 'http://'+domain+'/dingtalk.php?opt=addServer&code='+code,
             method: 'POST',
-            data: {'opt':'test','code':code},
+            data: {'server_ip':postData['server-ip'],
+                  'server_desc':postData['server-desc'],
+                  'server_port':postData['server-port'],
+                  'server_pwd':postData['server-pwd'],
+                  'server_type':1
+            },
             dataType: 'json',
             timeout:2000,
             success: function(res) {
-              dd.setStorage({
-                key: 'hubDomain',
-                data:domain,
-                success: function() {
-                  that.setData({'show':false})
-                  dd.alert({content: '添加成功'});
-                },
-                fail: function(res){
-                  dd.alert({content: res.errorMessage});
-                }
-              });
+              dd.showToast({
+                'type':'success',
+                'content':res.msg
+              })
             },
             fail: function(res) {
               console.log(res)
             },
             complete: function(res) {
-              console.log(res)
+              //console.log(res)
             }
           });
         },
@@ -129,8 +128,7 @@ Page({
           //测试域名是否部署了服务
           dd.httpRequest({
             url: 'http://'+domain+'/dingtalk.php?opt=test&code='+code,
-            method: 'POST',
-            data: {'opt':'test','code':code},
+            method: 'GET',
             dataType: 'json',
             timeout:2000,
             success: function(res) {

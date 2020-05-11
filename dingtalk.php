@@ -38,11 +38,11 @@ if($opt == 'listServer'){
 
 //添加服务器资源
 if($opt == 'addServer'){
-    $server_ip = isset($_GET['server_ip']) ? addslashes(trim($_GET['server_ip'])) : '';
-    $server_desc = isset($_GET['server_desc']) ? addslashes(trim($_GET['server_desc'])) : '';
-    $server_port = isset($_GET['server_port']) ? addslashes(trim($_GET['server_port'])) : '';
-    $server_pwd = isset($_GET['server_pwd']) ? addslashes(trim($_GET['server_pwd'])) : '';
-    $server_type = isset($_GET['server_type']) ? addslashes(trim($_GET['server_type'])) : '';
+    $server_ip = isset($_POST['server_ip']) ? addslashes(trim($_POST['server_ip'])) : '';
+    $server_desc = isset($_POST['server_desc']) ? addslashes(trim($_POST['server_desc'])) : '';
+    $server_port = isset($_POST['server_port']) ? addslashes(trim($_POST['server_port'])) : '';
+    $server_pwd = isset($_POST['server_pwd']) ? addslashes(trim($_POST['server_pwd'])) : '';
+    $server_type = isset($_POST['server_type']) ? addslashes(trim($_POST['server_type'])) : '';
 
     //TODO 更详细的过滤规则
     if(empty($server_ip) || empty($server_port) || empty($server_pwd) || empty($server_type)){

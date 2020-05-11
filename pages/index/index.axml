@@ -51,7 +51,7 @@
       <view class="modal-title">添加服务器</view>
     </view>
     <view class="modal-body">
-      <form name="add-server-form">
+      <form name="add-server-form" onSubmit="doAddServer">
         <view class="form-group clearfix">
             <label for="server-ip" class="control-label col-sm-2">服务器IP:</label>
             <view class="col-sm-4">
@@ -82,14 +82,15 @@
         <view class="form-group clearfix">
           <label for="server-public-key" class="control-label col-sm-2">Root密码:</label>
           <view class="col-sm-4">  
-            <input type="text" class="form-control" id="server-port" name="server-port" placeholder="例:123456">
+            <input type="text" class="form-control" id="server-pwd" name="server-pwd" placeholder="例:123456">
           </view>
         </view>
+
+        <view class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" onTap="closeAddServerModal">取消</button>
+          <button formType="submit" class="btn btn-primary" id="addServerSure">确认添加</button>
+        </view>
       </form>
-    </view>
-    <view class="modal-footer">
-      <button type="button" class="btn btn-default" data-dismiss="modal" onTap="closeAddServerModal">取消</button>
-      <button type="button" class="btn btn-primary" id="addServerSure" onTap="doAddServer">确认添加</button>
     </view>
   </view>
 </view>
