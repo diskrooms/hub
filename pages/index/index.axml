@@ -59,9 +59,9 @@
               </view>
         </view>
         <view class="form-group clearfix">
-          <label for="server-note" class="control-label col-sm-2">备注:</label>
+          <label for="server-desc" class="control-label col-sm-2">备注:</label>
           <view class="col-sm-4">
-            <input type="text" class="form-control" id="server-note" name="server-note" placeholder="例:阿里云服务器">
+            <input type="text" class="form-control" id="server-desc" name="server-desc" placeholder="例:阿里云服务器">
           </view>
         </view>
         <view class="form-group clearfix">
@@ -75,6 +75,7 @@
           <view class="col-sm-4">
             <picker class="form-control" name="server-type" onChange="bindPickerChange">
                 <view class="picker">中控服务器</view>
+                <view class="picker">应用服务器</view>
             </picker>
           </view>
         </view>

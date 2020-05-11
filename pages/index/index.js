@@ -74,54 +74,90 @@ Page({
 
   //关闭“添加服务器”对话框
   closeAddServerModal(){
-      this.setData({"showAddServerModal":false})
+    this.setData({"showAddServerModal":false})
   },
 
   //执行添加服务器操作
+  doAddServer(){
+    dd.getAuthCode({
+        success:function(res){
+          let code = res.authCode
+          //测试域名是否部署了服务
+          dd.httpRequest({
+            url: 'http://'+domain+'/dingtalk.php?opt=addServer&code='+code,
+            method: 'POST',
+            data: {'opt':'test','code':code},
+            dataType: 'json',
+            timeout:2000,
+            success: function(res) {
+              dd.setStorage({
+                key: 'hubDomain',
+                data:domain,
+                success: function() {
+                  that.setData({'show':false})
+                  dd.alert({content: '添加成功'});
+                },
+                fail: function(res){
+                  dd.alert({content: res.errorMessage});
+                }
+              });
+            },
+            fail: function(res) {
+              console.log(res)
+            },
+            complete: function(res) {
+              console.log(res)
+            }
+          });
+        },
+        fail:function(err){
 
+        }
+    });
+  },
 
   //执行添加域名操作
   addDomain(e){
-      let that = this
-      let domain = e.detail.value.domain
+    let that = this
+    let domain = e.detail.value.domain
 
-      //获取小程序免登code
-      dd.getAuthCode({
-          success:function(res){
-            //console.log(res) 662e6b09e81633ca9784795a270a2728
-            let code = res.authCode
-            //测试域名是否部署了服务
-            dd.httpRequest({
-              url: 'http://'+domain+'/dingtalk.php?opt=test&code='+code,
-              method: 'POST',
-              data: {'opt':'test','code':code},
-              dataType: 'json',
-              timeout:2000,
-              success: function(res) {
-                dd.setStorage({
-                  key: 'hubDomain',
-                  data:domain,
-                  success: function() {
-                    that.setData({'show':false})
-                    dd.alert({content: '添加成功'});
-                  },
-                  fail: function(res){
-                    dd.alert({content: res.errorMessage});
-                  }
-                });
-              },
-              fail: function(res) {
-                console.log(res)
-              },
-              complete: function(res) {
-                console.log(res)
-              }
-            });
-          },
-          fail:function(err){
+    //获取小程序免登code
+    dd.getAuthCode({
+        success:function(res){
+          //console.log(res) 662e6b09e81633ca9784795a270a2728
+          let code = res.authCode
+          //测试域名是否部署了服务
+          dd.httpRequest({
+            url: 'http://'+domain+'/dingtalk.php?opt=test&code='+code,
+            method: 'POST',
+            data: {'opt':'test','code':code},
+            dataType: 'json',
+            timeout:2000,
+            success: function(res) {
+              dd.setStorage({
+                key: 'hubDomain',
+                data:domain,
+                success: function() {
+                  that.setData({'show':false})
+                  dd.alert({content: '添加成功'});
+                },
+                fail: function(res){
+                  dd.alert({content: res.errorMessage});
+                }
+              });
+            },
+            fail: function(res) {
+              console.log(res)
+            },
+            complete: function(res) {
+              console.log(res)
+            }
+          });
+        },
+        fail:function(err){
 
-          }
-      });
+        }
+    });
 
       
 

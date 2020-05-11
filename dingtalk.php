@@ -29,11 +29,42 @@ if($authRs['errcode'] == 0){
 }
 
 
-//业务逻辑
+///////////////////////////业务逻辑
+//返回所有服务器资源
 if($opt == 'listServer'){
-    //返回所有服务器资源
     $servers = json_decode(file_get_contents('../servers.json'),true);
     ejson(200,$servers,'ok');
+}
+
+//添加服务器资源
+if($opt == 'addServer'){
+    $server_ip = isset($_GET['server_ip']) ? addslashes(trim($_GET['server_ip'])) : '';
+    $server_desc = isset($_GET['server_desc']) ? addslashes(trim($_GET['server_desc'])) : '';
+    $server_port = isset($_GET['server_port']) ? addslashes(trim($_GET['server_port'])) : '';
+    $server_pwd = isset($_GET['server_pwd']) ? addslashes(trim($_GET['server_pwd'])) : '';
+    $server_type = isset($_GET['server_type']) ? addslashes(trim($_GET['server_type'])) : '';
+
+    //TODO 更详细的过滤规则
+    if(empty($server_ip) || empty($server_port) || empty($server_pwd) || empty($server_type)){
+        ejson(198,[],'参数不能为空');
+    }
+    $servers = json_decode(file_get_contents('../servers.json'),true);
+    foreach($servers as $server){
+        if($server['ip'] == $server_ip){
+            ejson(198,[],'不能重复添加服务器');
+        }
+    }
+    $add = array(
+        'ip'=>$server_ip,
+        'desc'=>$server_desc,
+        'opt'=>'查看员工',
+        'pwd'=>$server_pwd,
+        'type'=>$server_type,
+        'port'=>$server_port
+    );
+    $servers = array_merge($servers,$add);
+    file_put_contents('../servers.json',json_encode($servers));
+    
 }
 
 if($opt == 'getAuthorizationUsers'){
