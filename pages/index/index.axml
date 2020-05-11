@@ -1,0 +1,231 @@
+<view class='mask' a:if='{{show}}'>
+  <view class='modal-content' style='height:{{height}}'>
+    <scroll-view scroll-y class='main-content'>
+      <form onSubmit="addDomain">
+
+        <view class="section">
+          <input name="domain" placeholder="这里输入您的专属哈勃域名(https)" onInput="checkDomain" />
+        </view>
+
+        <view class="btn-area">
+          <button formType="submit"   disabled="{{validDomain? '':'true'}}"   type="{{validDomain? 'primary':'default'}}">确定</button>
+        </view>
+      </form>
+    </scroll-view>
+  </view>
+</view>
+
+
+<view a:else class="wrapper">
+  <view class="btn btn-primary" id="addServer" onTap="showAddServerModal">
+    添加服务器
+  </view>
+
+  <view class="table">
+    <view class="tr bg-w">
+      <view class="th">服务器IP</view>
+      <view class="th">服务器信息</view>
+      <view class="th">操作</view>
+    </view>
+
+  <block a:for="{{listData}}" a:key="{[code]}">
+    <view class="tr bg-g" a:if="{{index % 2 == 0}}">
+      <view class="td">{{item.ip}}</view>
+      <view class="td">{{item.desc}}</view>
+      <view class="td" onTap="showAuthUsers">{{item.opt}}</view>
+    </view>
+    <view class="tr bg-x" a:else>
+      <view class="td">{{item.ip}}</view>
+      <view class="td">{{item.desc}}</view>
+      <view class="td" onTap="showAuthUsers">{{item.opt}}</view>
+    </view>
+  </block>
+  </view>
+</view>
+
+<!-- 添加服务器对话框 -->
+<view class="modal-dialog add-modal-dialog  mask" a:if='{{showAddServerModal}}'>
+  <view class="modal-content">
+    <view class="modal-header">
+      <button class="close" onTap="closeAddServerModal">×</button>
+      <view class="modal-title">添加服务器</view>
+    </view>
+    <view class="modal-body">
+      <form name="add-server-form">
+        <view class="form-group clearfix">
+            <label for="server-ip" class="control-label col-sm-2">服务器IP:</label>
+            <view class="col-sm-4">
+          <input type="text" class="form-control" id="server-ip" name="server-ip" require="" tip="IP" placeholder="例:8.8.8.8">
+              </view>
+        </view>
+        <view class="form-group clearfix">
+          <label for="server-note" class="control-label col-sm-2">备注:</label>
+          <view class="col-sm-4">
+            <input type="text" class="form-control" id="server-note" name="server-note" placeholder="例:阿里云服务器">
+          </view>
+        </view>
+        <view class="form-group clearfix">
+          <label for="server-port" class="control-label col-sm-2">SSH端口:</label>
+          <view class="col-sm-4">
+            <input type="text" class="form-control" id="server-port" name="server-port" placeholder="例:22">
+          </view>
+        </view>
+        <view class="form-group clearfix">
+          <label for="server-type" class="control-label col-sm-2">服务类型:</label>
+          <view class="col-sm-4">
+            <picker class="form-control" name="server-type" onChange="bindPickerChange">
+                <view class="picker">中控服务器</view>
+            </picker>
+          </view>
+        </view>
+        <view class="form-group clearfix">
+          <label for="server-public-key" class="control-label col-sm-2">Root密码:</label>
+          <view class="col-sm-4">  
+            <input type="text" class="form-control" id="server-port" name="server-port" placeholder="例:123456">
+          </view>
+        </view>
+      </form>
+    </view>
+    <view class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal" onTap="closeAddServerModal">取消</button>
+      <button type="button" class="btn btn-primary" id="addServerSure" onTap="doAddServer">确认添加</button>
+    </view>
+  </view>
+</view>
+
+<view class="iframe-content-wrapper page-wrapper chiller-theme toggled" a:if='{{showAuthUser}}'>
+  <view id="sidebar" class="sidebar-wrapper">
+    <view class="sidebar-content mCustomScrollbar _mCS_1 mCS-autoHide desktop mCS_no_scrollbar">
+      <view id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" style="max-height: none;" tabindex="0">
+        <view id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
+          <view id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" style="max-height: none;" tabindex="0">
+            <view id="mCSB_1_container" class="mCSB_container" style="position:relative; top:0; left:0;" dir="ltr">
+              <view id="toggle-sidebar" onTap="hiddenAuthUsers">
+                <view></view>
+                <view></view>
+                <view></view>
+              </view>
+              <view class="sidebar-brand">
+                <button type="button" class="btn btn-box-tool" id="add-authorization-user" onTap="addAuthUser"> 
+                  <view class="fa fa-plus">添加员工</view> 
+                </button>
+              </view>
+              <!--<view class="sidebar-search">
+                  <view class="input-group">
+                    <input type="text" class="form-control search-menu" placeholder="搜索...">
+                    <view class="input-group-addon">
+                      <view class="fa fa-search"></view> 
+                    </view> 
+                  </view>
+              </view>-->
+              
+              <!-- sidebar-search  -->
+              <view class="sidebar-menu">
+                <view id="authorization-users">
+                  <view class="header-menu"> <view>授权访问员工</view> </view>
+                </view>
+              </view>
+              <!-- sidebar-menu  --> 
+            </view>
+            <view id="mCSB_1_scrollbar_vertical" class="mCSB_scrollTools mCSB_1_scrollbar mCS-light mCSB_scrollTools_vertical" style="display: none;">
+              <view class="mCSB_draggerContainer">
+                <view id="mCSB_1_dragger_vertical" class="mCSB_dragger" style="position: absolute; min-height: 181.989px; display: block; height: 0px; max-height: 338px; top: 0px;">
+                  <view class="mCSB_dragger_bar" style="line-height: 181px;"> </view>
+                </view>
+                <view class="mCSB_draggerRail"> </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view id="mCSB_1_scrollbar_vertical" class="mCSB_scrollTools mCSB_1_scrollbar mCS-light mCSB_scrollTools_vertical">
+          <view class="mCSB_draggerContainer">
+            <view id="mCSB_1_dragger_vertical" class="mCSB_dragger" style="position:absolute;">
+              <view class="mCSB_dragger_bar"> </view>
+            </view>
+            <view class="mCSB_draggerRail"> </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <!-- sidebar-content  --> 
+    
+    <!--  遮罩层 --> 
+    <!-- <view id="layer"></view> --> 
+    <!-- /。 遮罩层 --> 
+    
+    <!-- 确认对话框 -->
+    <!-- <view class="modal fade in" id="modal-default">
+      <view class="modal-dialog delete-modal-dialog">
+        <view class="modal-content"> 
+          <view class="modal-body">
+            <view>确定要删除该用户授权？</view>
+          </view>
+          <view class="modal-footer">
+            <button type="button" class="btn btn-default pull-left" data-dismiss="modal" id="cancel-delete">取消</button>
+            <button type="button" class="btn btn-primary" id="sure-delete" data-id="">确定</button>
+          </view>
+        </view>
+
+      </view>
+
+    </view> -->
+    <!-- /。确认对话框 --> 
+    
+    <!-- 存储当前操作的 server-id -->
+    <input type="hidden" id="server-id" value="7" style="display:none;">
+    <!-- /.存储当前操作的 server-id --> 
+  </view>
+</view>
+
+
+<!-- 添加授权访问服务器员工面板 -->
+<view class="modal fade in show" id="add-authorization-user-modal">
+	  <view class="modal-dialog add-modal-dialog" role="document">
+	    <view class="modal-content">
+	      <view class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+	        <view class="modal-title" id="exampleModalLabel">添加用户授权</view>
+	      </view>
+	      <view class="modal-body">
+	        <form name="add-modal-form">
+	          <view class="form-group clearfix">
+	             <label for="authorization-staff-depart" class="control-label col-sm-3">授权员工:</label>
+	             <view class="col-sm-4">
+		              <select class="form-control" id="authorization-staff-depart" name="authorization-staff-depart">
+	                    <option value="">请选择部门</option>
+	                    <option value="26">行政部</option>
+                      <option value="27">财务部</option>
+                      <option value="28">开发部</option>
+                      <option value="29">&nbsp;&nbsp;&nbsp;&nbsp;└─Android开发组</option>
+                      <option value="36">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─123</option>
+                  </select>
+                 </view>
+                 <view class="col-sm-4">
+	                 <select class="form-control" id="authorization-staff" name="authorization-staff" require="" tip="授权员工">
+	                    <option value="">请选择员工</option>
+	                 </select><i class="fa fa-exclamation-circle red" aria-hidden="true"> 授权员工不能为空</i>
+                 </view>
+	          </view>
+	          <view class="form-group clearfix">
+	            <label for="authorization-username" class="control-label col-sm-3">服务器用户名:</label>
+	            <view class="col-sm-4"><input type="text" class="form-control" id="authorization-username" name="authorization-username" require="" tip="用户名"></view>
+	          </view>
+	          <view class="form-group clearfix">
+	            <label for="authorization-pwd" class="control-label col-sm-3">服务器密码:</label>
+	            <view class="col-sm-4"><input type="text" class="form-control" id="authorization-pwd" name="authorization-pwd" require="" tip="密码"></view>
+	          </view>
+	          <view class="form-group clearfix">
+	            <label for="" class="control-label col-sm-3">重复密码:</label>
+	            <view class="col-sm-4">
+                <input type="text" class="form-control" id="authorization-repwd" name="authorization-repwd" require="" tip="重复密码" equal="authorization-pwd" equal-error="重复密码不一致">
+              </view>
+	          </view>
+	        </form>
+	      </view>
+	      <view class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+	        <button type="button" class="btn btn-primary" onclick="javascript:addAuthorizationSure()">确认添加</button>
+	      </view>
+	    </view>
+	  </view>
+	</view>
