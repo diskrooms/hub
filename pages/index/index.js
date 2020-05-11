@@ -7,10 +7,7 @@ Page({
     showAddServerModal:false,  //是否显示添加服务器对话框
     validDomain:false,  //JS正则匹配所填写域名是否合法
     domain:'',          //存储填写域名值
-    listData:[
-      {"ip":"39.98.73.255","desc":"阿里云服务器","opt":"查看用户"},
-      {"ip":"198.181.39.45","desc":"搬瓦工","opt":"查看用户"}
-    ],
+    listData:[],
     showAuthUser:false, //是否显示授权员工面板
     addAuthUser:false,  //是否显示添加授权员工对话框
     authorizationUserData:{}      //需要添加授权员工表单数据
@@ -39,8 +36,8 @@ Page({
                     data: {},
                     dataType: 'json',
                     timeout:2000,
-                    success: function(res) {
-
+                    success: function(serversRes) {
+                      that.setData({'listData':serversRes.data.data})
                     },
                     fail: function(res) {
                       console.log(res)
@@ -60,14 +57,14 @@ Page({
   },
 
   onShow(){
-      dd.getAuthCode({
+      /*dd.getAuthCode({
           success:function(res){
             //dd.alert({content: res.authCode});
           },
           fail:function(err){
 
           }
-      })   
+      })*/
   },
 
   //打开“添加服务器”对话框
