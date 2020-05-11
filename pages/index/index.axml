@@ -106,7 +106,7 @@
                 <view></view>
               </view>
               <view class="sidebar-brand">
-                <button type="button" class="btn btn-box-tool" id="add-authorization-user" onTap="addAuthUser"> 
+                <button type="button" class="btn btn-box-tool" id="add-authorization-user" onTap="showAddAuthUser"> 
                   <view class="fa fa-plus">添加员工</view> 
                 </button>
               </view>
@@ -179,45 +179,32 @@
 
 
 <!-- 添加授权访问服务器员工面板 -->
-<view class="modal fade in show" id="add-authorization-user-modal">
+<view class="modal fade in show mask" id="add-authorization-user-modal" a:if="{{addAuthUser}}">
 	  <view class="modal-dialog add-modal-dialog" role="document">
 	    <view class="modal-content">
 	      <view class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
 	        <view class="modal-title" id="exampleModalLabel">添加用户授权</view>
 	      </view>
 	      <view class="modal-body">
 	        <form name="add-modal-form">
 	          <view class="form-group clearfix">
-	             <label for="authorization-staff-depart" class="control-label col-sm-3">授权员工:</label>
-	             <view class="col-sm-4">
-		              <select class="form-control" id="authorization-staff-depart" name="authorization-staff-depart">
-	                    <option value="">请选择部门</option>
-	                    <option value="26">行政部</option>
-                      <option value="27">财务部</option>
-                      <option value="28">开发部</option>
-                      <option value="29">&nbsp;&nbsp;&nbsp;&nbsp;└─Android开发组</option>
-                      <option value="36">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─123</option>
-                  </select>
-                 </view>
-                 <view class="col-sm-4">
-	                 <select class="form-control" id="authorization-staff" name="authorization-staff" require="" tip="授权员工">
-	                    <option value="">请选择员工</option>
-	                 </select><i class="fa fa-exclamation-circle red" aria-hidden="true"> 授权员工不能为空</i>
-                 </view>
+	              <view for="authorization-staff-depart" class="control-label col-sm-3">授权员工:</view>
+                <view class="col-sm-4" onTap="chooseEmployee">点击选择</view>
+                <view class="col-sm-4">{{authorizationUserData.employee_name}}</view>
 	          </view>
 	          <view class="form-group clearfix">
 	            <label for="authorization-username" class="control-label col-sm-3">服务器用户名:</label>
-	            <view class="col-sm-4"><input type="text" class="form-control" id="authorization-username" name="authorization-username" require="" tip="用户名"></view>
+	            <view class="col-sm-4"><input type="text" class="form-control" id="authorization-username" name="authorization-username" require="" tip="用户名" value="{{authorizationUserData.authorization_name}}" disabled="true"></view>
 	          </view>
 	          <view class="form-group clearfix">
 	            <label for="authorization-pwd" class="control-label col-sm-3">服务器密码:</label>
-	            <view class="col-sm-4"><input type="text" class="form-control" id="authorization-pwd" name="authorization-pwd" require="" tip="密码"></view>
+	            <view class="col-sm-4"><input type="text" class="form-control" id="authorization-pwd" name="authorization-pwd" require="" tip="密码" value="{{authorizationUserData.authorization_pwd}}"></view>
 	          </view>
 	          <view class="form-group clearfix">
 	            <label for="" class="control-label col-sm-3">重复密码:</label>
 	            <view class="col-sm-4">
-                <input type="text" class="form-control" id="authorization-repwd" name="authorization-repwd" require="" tip="重复密码" equal="authorization-pwd" equal-error="重复密码不一致">
+                <input type="text" class="form-control" id="authorization-repwd" name="authorization-repwd" require="" tip="重复密码" value="{{authorizationUserData.authorization_repwd}}" equal="authorization-pwd" equal-error="重复密码不一致">
               </view>
 	          </view>
 	        </form>
