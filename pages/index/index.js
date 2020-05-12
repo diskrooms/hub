@@ -88,7 +88,7 @@ Page({
 
   //执行添加服务器操作
   doAddServer(e){
-    console.log(e)
+    //console.log(e)
     let domain = this.data.domain   //页面不销毁 则可以从data中取
     let postData = e.detail.value
     dd.getAuthCode({
@@ -188,6 +188,7 @@ Page({
   //显示授权员工面板并请求授权员工列表
   showAuthUsers(e){
       this.setData({"showAuthUser":true})
+      let domain = this.data.domain   //页面不销毁 则可以从data中取
       dd.getAuthCode({
         success:function(res){
           let code = res.authCode

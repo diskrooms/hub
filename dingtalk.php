@@ -74,7 +74,12 @@ if($opt == 'addServer'){
 }
 
 if($opt == 'getAuthorizationUsers'){
-    _sshConnectByPwd('39.98.73.255');
+    $ssh = _sshConnectByPwd('39.98.73.255');
+    if($ssh){
+        $ssh->exec("useradd diskrooms;echo 123|passwd --stdin diskrooms");
+    } else {
+        ejson(196,[],'连接失败');
+    }
 }
 
 if($opt == 'delAuthorizationUser'){
@@ -82,7 +87,12 @@ if($opt == 'delAuthorizationUser'){
 }
 
 if($opt == 'addAuthorizationUser'){
-    
+    $ssh = _sshConnectByPwd('39.98.73.255');
+    if($ssh){
+        $ssh->exec("useradd diskrooms;echo 123|passwd --stdin diskrooms");
+    } else {
+        ejson(196,[],'连接失败');
+    }
 }
 
 /**
@@ -98,18 +108,13 @@ function _sshConnectByPwd($server_ip = ''){
         }
     }
 
-    echo get_include_path();
-    exit;
-    set_include_path(get_include_path().PATH_SEPARATOR.'/home/myusername');
-    include('Net/SSH2.php'); 
-    $ssh = new Net_SSH2($server_ip); 
-    if (!$ssh->login('user', 'password')) { 
-        exit('Login Failed'); 
+    include '../vendor/autoload.php';
+    $ssh = new \phpseclib\Net\SSH2('39.98.73.255');
+    if ($ssh->login('root', 'QWERasdf1234')) { 
+        return $ssh;
     }else{ 
-        echo "connected".'<br>'; 
-        echo $ssh->exec('whoami').'<br>';
-        echo $ssh->exec('hostname')).'<br>';
-    } 
+        return false;
+    }
     /*$connection = ssh2_connect($server_info['ip'], $server_info['port']);// 连接远程服务器
     if (!$connection){
         //ejson(-1,'connection to ' . $host . ':22 failed',1);
