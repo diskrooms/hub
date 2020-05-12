@@ -28,16 +28,16 @@
       <view class="th">操作</view>
     </view>
 
-  <block a:for="{{listData}}" a:key="{[code]}">
+  <block a:for="{{listData}}" a:key="{{code}}">
     <view class="tr bg-g" a:if="{{index % 2 == 0}}">
       <view class="td">{{item.ip}}</view>
       <view class="td">{{item.desc}}</view>
-      <view class="td" onTap="showAuthUsers">{{item.opt}}</view>
+      <view class="td" onTap="showAuthUsers" data-index="{{index}}">{{item.opt}}</view>
     </view>
     <view class="tr bg-x" a:else>
       <view class="td">{{item.ip}}</view>
       <view class="td">{{item.desc}}</view>
-      <view class="td" onTap="showAuthUsers">{{item.opt}}</view>
+      <view class="td" onTap="showAuthUsers" data-index="{{index}}">{{item.opt}}</view>
     </view>
   </block>
   </view>
@@ -153,7 +153,7 @@
     
     <!--  遮罩层 --> 
     <!-- <view id="layer"></view> --> 
-    <!-- /。 遮罩层 --> 
+    <!-- /. 遮罩层 --> 
     
     <!-- 确认对话框 -->
     <!-- <view class="modal fade in" id="modal-default">
@@ -171,17 +171,13 @@
       </view>
 
     </view> -->
-    <!-- /。确认对话框 --> 
-    
-    <!-- 存储当前操作的 server-id -->
-    <input type="hidden" id="server-id" value="7" style="display:none;">
-    <!-- /.存储当前操作的 server-id --> 
+    <!-- /. 确认对话框 --> 
   </view>
 </view>
 
 
 <!-- 添加授权访问服务器员工面板 -->
-<view class="modal fade in show mask" id="add-authorization-user-modal" a:if="{{addAuthUser}}">
+<view class="modal fade in show" id="add-authorization-user-modal" a:if="{{addAuthUser}}">
 	  <view class="modal-dialog add-modal-dialog" role="document">
 	    <view class="modal-content">
 	      <view class="modal-header">
@@ -189,11 +185,11 @@
 	        <view class="modal-title" id="exampleModalLabel">添加用户授权</view>
 	      </view>
 	      <view class="modal-body">
-	        <form name="add-modal-form">
+	        <form name="add-modal-form" onSubmit="doAddAuthUser">
 	          <view class="form-group clearfix">
 	              <view for="authorization-staff-depart" class="control-label col-sm-3">授权员工:</view>
                 <view class="col-sm-4" onTap="chooseEmployee">点击选择</view>
-                <view class="col-sm-4">{{authorizationUserData.employee_name}}</view>
+                <input type="text" name="authorization-truename" value="{{authorizationUserData.employee_name}}" disabled="true">
 	          </view>
 	          <view class="form-group clearfix">
 	            <label for="authorization-username" class="control-label col-sm-3">服务器用户名:</label>
@@ -209,11 +205,12 @@
                 <input type="text" class="form-control" id="authorization-repwd" name="authorization-repwd" require="" tip="重复密码" value="{{authorizationUserData.authorization_repwd}}" equal="authorization-pwd" equal-error="重复密码不一致">
               </view>
 	          </view>
+
+            <view class="modal-footer">
+              <button class="btn btn-default" onTap="hideAddAuthUser">取消</button>
+              <button class="btn btn-primary" formType="submit">确认添加</button>
+            </view>
 	        </form>
-	      </view>
-	      <view class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-	        <button type="button" class="btn btn-primary" onclick="javascript:addAuthorizationSure()">确认添加</button>
 	      </view>
 	    </view>
 	  </view>

@@ -65,7 +65,7 @@ if($opt == 'addServer'){
             )
         );
     $servers = array_merge($servers,$add);
-    $res = file_put_contents('../servers.json',json_encode($servers));
+    $res = file_put_contents('../servers.json',json_encode($servers,JSON_UNESCAPED_UNICODE));
     if($res){
         ejson(200,[],'添加成功');
     } else {
@@ -73,25 +73,61 @@ if($opt == 'addServer'){
     }
 }
 
+//获取授权员工列表
 if($opt == 'getAuthorizationUsers'){
-    $ssh = _sshConnectByPwd('39.98.73.255');
-    if($ssh){
-        $ssh->exec("useradd diskrooms;echo 123|passwd --stdin diskrooms");
-    } else {
-        ejson(196,[],'连接失败');
+    $index = intval($_POST['index']);
+    $servers = json_decode(file_get_contents('../servers.json'),true);
+    if(!isset($servers[$index])){
+        ejson(196,[],'服务器信息丢失');
     }
+    
 }
 
+//删除授权员工
 if($opt == 'delAuthorizationUser'){
     
 }
 
+//添加授权员工
 if($opt == 'addAuthorizationUser'){
-    $ssh = _sshConnectByPwd('39.98.73.255');
+    //服务器索引
+    $index = intval($_POST['index']);
+    $authTrueName = isset($_POST['authTrueName']) ? addslashes(trim($_POST['authTrueName'])) : '';
+    $authUserName = isset($_POST['authUserName']) ? addslashes(trim($_POST['authUserName'])) : '';
+    $authPwd = isset($_POST['authPwd']) ? addslashes(trim($_POST['authPwd'])) : '';
+    $authRepwd = isset($_POST['authRepwd']) ? addslashes(trim($_POST['authRepwd'])) : '';
+    if(empty($authTrueName) || empty($authUserName) || empty($authPwd) || empty($authRepwd)){
+        ejson(195,[],'添加授权员工参数缺失');
+    }
+    if($authPwd !== $authRepwd){
+        ejson(194,[],'添加授权员工密码不一致');
+    }
+    $servers = json_decode(file_get_contents('../servers.json'),true);
+    if(!isset($servers[$index])){
+        ejson(196,[],'服务器信息缺失');
+    }
+    $ssh = _sshConnectByPwd($servers[$index]);
     if($ssh){
-        $ssh->exec("useradd diskrooms;echo 123|passwd --stdin diskrooms");
+        $addAuthUserResult = $ssh->exec("useradd ".$authUserName.";echo ".$authPwd."|passwd --stdin ".$authUserName);
+        if($addAuthUserResult){
+            $oldAuthUsers = $servers[$index]['authUsers'];
+            $newAuthUser = array(
+                array('truename'=>$authTrueName,'username'=>$authUserName)
+            );
+            $authUsers = array_merge($oldAuthUsers,$newAuthUser);
+            $servers[$index]['authUsers'] = $authUsers;
+            $res = file_put_contents('../servers.json',json_encode($servers,JSON_UNESCAPED_UNICODE));
+            if($res){
+                //添加授权员工成功
+                ejson(200,$authUsers,'ok');
+            } else {
+                ejson(192,[],'添加授权员工失败');
+            }
+        } else {
+            ejson(193,[],'添加授权员工失败');
+        }
     } else {
-        ejson(196,[],'连接失败');
+        ejson(196,[],'添加授权员工连接失败');
     }
 }
 
@@ -99,18 +135,12 @@ if($opt == 'addAuthorizationUser'){
  * ssh通过密码连接
  * @return number|boolean
  */
-function _sshConnectByPwd($server_ip = ''){
-    $servers = json_decode(file_get_contents('../servers.json'),true);
-    foreach($servers as $server){
-        if($server['ip'] == $server_ip){
-            $server_info = $server;
-            break;
-        }
-    }
+function _sshConnectByPwd($serverInfo = array()){
+
 
     include '../vendor/autoload.php';
-    $ssh = new \phpseclib\Net\SSH2('39.98.73.255');
-    if ($ssh->login('root', 'QWERasdf1234')) { 
+    $ssh = new \phpseclib\Net\SSH2($serverInfo['ip']);
+    if ($ssh->login('root', $serverInfo['pwd'])) { 
         return $ssh;
     }else{ 
         return false;
