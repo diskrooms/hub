@@ -55,13 +55,15 @@ if($opt == 'addServer'){
         }
     }
     $add = array(
-        'ip'=>$server_ip,
-        'desc'=>$server_desc,
-        'opt'=>'查看员工',
-        'pwd'=>$server_pwd,
-        'type'=>$server_type,
-        'port'=>$server_port
-    );
+            array(
+                'ip'=>$server_ip,
+                'desc'=>$server_desc,
+                'opt'=>'查看员工',
+                'pwd'=>$server_pwd,
+                'type'=>$server_type,
+                'port'=>$server_port
+            )
+        );
     $servers = array_merge($servers,$add);
     $res = file_put_contents('../servers.json',json_encode($servers));
     if($res){
