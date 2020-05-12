@@ -71,27 +71,20 @@ if($opt == 'addServer'){
     } else {
         ejson(197,[],'添加失败');
     }
-}
-
-//获取授权员工列表
-if($opt == 'getAuthorizationUsers'){
+} else if($opt == 'getAuthorizationUsers'){
+    //获取授权员工列表
     $index = intval($_POST['index']);
     $servers = json_decode(file_get_contents('../servers.json'),true);
     if(!isset($servers[$index])){
         ejson(196,[],'服务器信息丢失');
     }
     
-}
-
-//删除授权员工
-if($opt == 'delAuthorizationUser'){
+} else if($opt == 'delAuthorizationUser'){
+    //删除授权员工
     
-}
-
-//添加授权员工
-if($opt == 'addAuthorizationUser'){
-    //服务器索引
-    $index = intval($_POST['index']);
+} else if($opt == 'addAuthorizationUser'){
+    //添加授权员工
+    $index = intval($_POST['index']);   //服务器索引
     $authTrueName = isset($_POST['authTrueName']) ? addslashes(trim($_POST['authTrueName'])) : '';
     $authUserName = isset($_POST['authUserName']) ? addslashes(trim($_POST['authUserName'])) : '';
     $authPwd = isset($_POST['authPwd']) ? addslashes(trim($_POST['authPwd'])) : '';
@@ -114,6 +107,7 @@ if($opt == 'addAuthorizationUser'){
             $newAuthUser = array(
                 array('truename'=>$authTrueName,'username'=>$authUserName)
             );
+            //TODO null 合并bug修复
             $authUsers = array_merge($oldAuthUsers,$newAuthUser);
             $servers[$index]['authUsers'] = $authUsers;
             $res = file_put_contents('../servers.json',json_encode($servers,JSON_UNESCAPED_UNICODE));
@@ -129,6 +123,8 @@ if($opt == 'addAuthorizationUser'){
     } else {
         ejson(196,[],'添加授权员工连接失败');
     }
+} else {
+    ejson(190,[],'非法操作');
 }
 
 /**
@@ -136,13 +132,13 @@ if($opt == 'addAuthorizationUser'){
  * @return number|boolean
  */
 function _sshConnectByPwd($serverInfo = array()){
-
-
     include '../vendor/autoload.php';
-    $ssh = new \phpseclib\Net\SSH2($serverInfo['ip']);
+    $ssh = new \phpseclib\Net\SSH2($serverInfo['ip'],$serverInfo['port']);
     if ($ssh->login('root', $serverInfo['pwd'])) { 
+        echo '1';
         return $ssh;
     }else{ 
+        echo '2';
         return false;
     }
     /*$connection = ssh2_connect($server_info['ip'], $server_info['port']);// 连接远程服务器

@@ -286,7 +286,7 @@ Page({
       success:function(res){
         let code = res.authCode
         dd.httpRequest({
-          url: 'http://'+domain+'/dingtalk.php?opt=addAuthorizationUsers&code='+code,
+          url: 'http://'+domain+'/dingtalk.php?opt=addAuthorizationUser&code='+code,
           method: 'POST',
           data:{'index':index,'authTrueName':postData['authorization-truename'],'authUserName':postData['authorization-username'],'authPwd':postData['authorization-pwd'],'authRepwd':postData['authorization-repwd']},
           dataType: 'json',
