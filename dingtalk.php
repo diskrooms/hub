@@ -74,7 +74,7 @@ if($opt == 'addServer'){
 }
 
 if($opt == 'getAuthorizationUsers'){
-    
+    _sshConnectByPwd('39.98.73.255');
 }
 
 if($opt == 'delAuthorizationUser'){
@@ -83,6 +83,48 @@ if($opt == 'delAuthorizationUser'){
 
 if($opt == 'addAuthorizationUser'){
     
+}
+
+/**
+ * ssh通过密码连接
+ * @return number|boolean
+ */
+function _sshConnectByPwd($server_ip = ''){
+    $servers = json_decode(file_get_contents('../servers.json'),true);
+    foreach($servers as $server){
+        if($server['ip'] == $server_ip){
+            $server_info = $server;
+            break;
+        }
+    }
+
+    echo get_include_path();
+    exit;
+    set_include_path(get_include_path().PATH_SEPARATOR.'/home/myusername');
+    include('Net/SSH2.php'); 
+    $ssh = new Net_SSH2($server_ip); 
+    if (!$ssh->login('user', 'password')) { 
+        exit('Login Failed'); 
+    }else{ 
+        echo "connected".'<br>'; 
+        echo $ssh->exec('whoami').'<br>';
+        echo $ssh->exec('hostname')).'<br>';
+    } 
+    /*$connection = ssh2_connect($server_info['ip'], $server_info['port']);// 连接远程服务器
+    if (!$connection){
+        //ejson(-1,'connection to ' . $host . ':22 failed',1);
+        return -1;
+    }
+    //获取验证方式
+    $auth_methods = ssh2_auth_none($connection, 'root');
+    if (in_array('password', $auth_methods)) {
+        // 通过password方式登录远程服务器
+        if (ssh2_auth_password($connection, 'root', $server_info['root_pwd'])) {
+            $this->connection = $connection;
+            return true;
+        }
+    }*/
+    return false;
 }
 
 /**

@@ -185,9 +185,32 @@ Page({
     }
   },
 
-  //显示授权员工面板
+  //显示授权员工面板并请求授权员工列表
   showAuthUsers(e){
       this.setData({"showAuthUser":true})
+      dd.getAuthCode({
+        success:function(res){
+          let code = res.authCode
+          dd.httpRequest({
+            url: 'http://'+domain+'/dingtalk.php?opt=getAuthorizationUsers&code='+code,
+            method: 'GET',
+            dataType: 'json',
+            timeout:2000,
+            success: function(res) {
+              
+            },
+            fail: function(res) {
+              console.log(res)
+            },
+            complete: function(res) {
+              console.log(res)
+            }
+          });
+        },
+        fail:function(err){
+
+        }
+      });
   },
   
   //关闭授权员工面板
