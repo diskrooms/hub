@@ -78,8 +78,11 @@ if($opt == 'addServer'){
     if(!isset($servers[$index])){
         ejson(196,[],'服务器信息丢失');
     }
+<<<<<<< HEAD
     $oldAuthUsers = $servers[$index]['authUsers'];
     ejson(196,$oldAuthUsers,'ok');
+=======
+>>>>>>> 7316ae6047c15742dbc4e4065a05f8f4cf0dc5e3
     
 } else if($opt == 'delAuthorizationUser'){
     //删除授权员工

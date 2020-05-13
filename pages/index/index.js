@@ -12,7 +12,7 @@ Page({
     addAuthUser:false,  //是否显示添加授权员工对话框
     authorizationUserData:{},      //需要添加授权员工表单数据
     array:['中控服务器','应用服务器'],
-    index:0
+    curOptServerIndex:-1           //当前操作的服务器索引ID
   },
   
   Utils: new Utils(),
@@ -189,12 +189,15 @@ Page({
   showAuthUsers(e){
       this.setData({"showAuthUser":true})
       let domain = this.data.domain   //页面不销毁 则可以从data中取
+      let index = e.target.dataset.index
+      this.setData({'curOptServerIndex':index})
       dd.getAuthCode({
         success:function(res){
           let code = res.authCode
           dd.httpRequest({
             url: 'http://'+domain+'/dingtalk.php?opt=getAuthorizationUsers&code='+code,
-            method: 'GET',
+            method: 'POST',
+            data:{'index':index},
             dataType: 'json',
             timeout:2000,
             success: function(res) {
@@ -261,14 +264,47 @@ Page({
             } else {
               let authorizationUserData = {}
               authorizationUserData['employee_name'] = res.users[0]['name']
-              authorizationUserData['authorization_name'] = 'dingding-'+res.users[0]['userId']
-              authorizationUserData['authorization_pwd'] = 'dingding-'+res.users[0]['userId']
-              authorizationUserData['authorization_repwd'] = 'dingding-'+res.users[0]['userId']
+              authorizationUserData['authorization_name'] = 'dd-'+res.users[0]['userId']
+              authorizationUserData['authorization_pwd'] = 'dd-'+res.users[0]['userId']
+              authorizationUserData['authorization_repwd'] = 'dd-'+res.users[0]['userId']
               that.setData({'authorizationUserData':authorizationUserData})
             }
         },
         fail:function(err){
         }
     })
+  },
+
+
+  //执行添加授权员工操作
+  doAddAuthUser(e){
+    let domain = this.data.domain   //页面不销毁 则可以从data中取
+    let index = this.data.curOptServerIndex
+    let postData = e.detail.value
+    this.setData({'curOptServerIndex':index})
+    dd.getAuthCode({
+      success:function(res){
+        let code = res.authCode
+        dd.httpRequest({
+          url: 'http://'+domain+'/dingtalk.php?opt=addAuthorizationUser&code='+code,
+          method: 'POST',
+          data:{'index':index,'authTrueName':postData['authorization-truename'],'authUserName':postData['authorization-username'],'authPwd':postData['authorization-pwd'],'authRepwd':postData['authorization-repwd']},
+          dataType: 'json',
+          timeout:2000,
+          success: function(res) {
+            
+          },
+          fail: function(res) {
+            console.log(res)
+          },
+          complete: function(res) {
+            console.log(res)
+          }
+        });
+      },
+      fail:function(err){
+
+      }
+    });
   }
 });
