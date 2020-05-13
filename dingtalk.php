@@ -137,13 +137,17 @@ if($opt == 'listServer'){
 function _registerDingtalkCallback($access_token = ''){
     $registerCallbackUrl = 'https://oapi.dingtalk.com/call_back/register_call_back?access_token='.$access_token;
     $postData = array(
-        "call_back_tag"=>["user_leave_org"],
+        "call_back_tag"=>array("user_leave_org"),
         "token"=>"123456",
         "aes_key"=>"xxxxxxxxlvdhntotr3x9qhlbytb18zyz5zxxxxxxxxx",
-        "url"=>"http://".addslashes(trim($_SERVER['HOST_NAME']))."/dingtalk.php?opt=callback"
+        "url"=>"http://dd.ehangoa.com/dingtalk.php?opt=callback"
     );
-    return requestPost($registerCallbackUrl,$postData);
+    $postJson = json_encode($postData);
+    //echo $postJson;
+    print_r(requestPost($registerCallbackUrl, $postJson, array('Accept:application/json','Content-Type:application/json')));
+    exit();
 }
+
 
 /**
  * ssh通过密码连接
@@ -315,8 +319,8 @@ function requestPost($url = '', $data = array(), $header = array(), $timeout = 6
         } else {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         }
-        //curl_setopt($ch, CURLOPT_PROXY, '192.168.1.100'); //代理服务器地址
-        //curl_setopt($ch, CURLOPT_PROXYPORT,'8888'); 		//代理服务器端口
+        curl_setopt($ch, CURLOPT_PROXY, '127.0.0.1'); //代理服务器地址
+        curl_setopt($ch, CURLOPT_PROXYPORT,'8888'); 		//代理服务器端口
         //curl_setopt($ch, CURLOPT_SAFE_UPLOAD, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_POST, 1);				// post方式
@@ -326,11 +330,12 @@ function requestPost($url = '', $data = array(), $header = array(), $timeout = 6
             if(curl_errno($ch) == CURLE_OPERATION_TIMEDOUT){
                 if($index < $count){
                     //请求重发
-                    requestPost($url,$data);
+                    requestPost($url,$data,$header);
                 }
             }
             
         }
+
         curl_close($ch);
     } else {
         //检查 allow_url_fopen 配置
