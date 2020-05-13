@@ -84,6 +84,7 @@ if($opt == 'addServer'){
 } else if($opt == 'delAuthorizationUser'){
     //删除授权员工
     
+
 } else if($opt == 'addAuthorizationUser'){
     //添加授权员工
     $index = intval($_POST['index']);   //服务器索引
