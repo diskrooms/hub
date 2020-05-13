@@ -191,6 +191,7 @@ Page({
       let domain = this.data.domain   //页面不销毁 则可以从data中取
       let index = e.target.dataset.index
       this.setData({'curOptServerIndex':index})
+      let that = this
       dd.getAuthCode({
         success:function(res){
           let code = res.authCode
@@ -201,7 +202,8 @@ Page({
             dataType: 'json',
             timeout:2000,
             success: function(res) {
-              console.log(res.data.data)
+              let authUsers = res.data.data
+              that.setData({})
             },
             fail: function(res) {
               //console.log(res)
