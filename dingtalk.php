@@ -78,8 +78,8 @@ if($opt == 'addServer'){
     if(!isset($servers[$index])){
         ejson(196,[],'服务器信息丢失');
     }
-    $oldAuthUsers = $servers[$index]['authUsers'];
-    ejson(196,$oldAuthUsers,'ok');
+    $oldAuthUsers = $servers[$index]['authUsers'] ? $servers[$index]['authUsers'] : array();
+    ejson(200,$oldAuthUsers,'ok');
     
 } else if($opt == 'delAuthorizationUser'){
     //删除授权员工
@@ -138,27 +138,10 @@ function _sshConnectByPwd($serverInfo = array()){
     include '../vendor/autoload.php';
     $ssh = new \phpseclib\Net\SSH2($serverInfo['ip'],$serverInfo['port']);
     if ($ssh->login('root', $serverInfo['pwd'])) { 
-        echo '1';
         return $ssh;
     }else{ 
-        echo '2';
         return false;
     }
-    /*$connection = ssh2_connect($server_info['ip'], $server_info['port']);// 连接远程服务器
-    if (!$connection){
-        //ejson(-1,'connection to ' . $host . ':22 failed',1);
-        return -1;
-    }
-    //获取验证方式
-    $auth_methods = ssh2_auth_none($connection, 'root');
-    if (in_array('password', $auth_methods)) {
-        // 通过password方式登录远程服务器
-        if (ssh2_auth_password($connection, 'root', $server_info['root_pwd'])) {
-            $this->connection = $connection;
-            return true;
-        }
-    }*/
-    return false;
 }
 
 /**

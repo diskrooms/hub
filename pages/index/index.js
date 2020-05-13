@@ -201,13 +201,13 @@ Page({
             dataType: 'json',
             timeout:2000,
             success: function(res) {
-              
+              console.log(res.data.data)
             },
             fail: function(res) {
-              console.log(res)
+              //console.log(res)
             },
             complete: function(res) {
-              console.log(res)
+              //console.log(res)
             }
           });
         },

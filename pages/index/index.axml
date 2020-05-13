@@ -88,7 +88,7 @@
 
         <view class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal" onTap="closeAddServerModal">取消</button>
-          <button formType="submit" class="btn btn-primary" id="addServerSure">确认添加</button>
+          <button formType="submit" class="btn btn-primary">确认添加</button>
         </view>
       </form>
     </view>
@@ -129,24 +129,27 @@
               </view>
               <!-- sidebar-menu  --> 
             </view>
-            <view id="mCSB_1_scrollbar_vertical" class="mCSB_scrollTools mCSB_1_scrollbar mCS-light mCSB_scrollTools_vertical" style="display: none;">
+            <!-- <view id="mCSB_1_scrollbar_vertical" class="mCSB_scrollTools mCSB_1_scrollbar mCS-light mCSB_scrollTools_vertical" style="display: none;">
               <view class="mCSB_draggerContainer">
                 <view id="mCSB_1_dragger_vertical" class="mCSB_dragger" style="position: absolute; min-height: 181.989px; display: block; height: 0px; max-height: 338px; top: 0px;">
                   <view class="mCSB_dragger_bar" style="line-height: 181px;"> </view>
                 </view>
                 <view class="mCSB_draggerRail"> </view>
               </view>
-            </view>
+            </view> -->
+
           </view>
         </view>
-        <view id="mCSB_1_scrollbar_vertical" class="mCSB_scrollTools mCSB_1_scrollbar mCS-light mCSB_scrollTools_vertical">
+
+        <!-- <view id="mCSB_1_scrollbar_vertical" class="mCSB_scrollTools mCSB_1_scrollbar mCS-light mCSB_scrollTools_vertical">
           <view class="mCSB_draggerContainer">
             <view id="mCSB_1_dragger_vertical" class="mCSB_dragger" style="position:absolute;">
               <view class="mCSB_dragger_bar"> </view>
             </view>
             <view class="mCSB_draggerRail"> </view>
           </view>
-        </view>
+        </view> -->
+
       </view>
     </view>
     <!-- sidebar-content  --> 
