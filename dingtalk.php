@@ -105,11 +105,11 @@ if($opt == 'addServer'){
     if($ssh){
         $addAuthUserResult = $ssh->exec("useradd ".$authUserName.";echo ".$authPwd."|passwd --stdin ".$authUserName);
         if($addAuthUserResult){
-            $oldAuthUsers = $servers[$index]['authUsers'];
+            $oldAuthUsers = $servers[$index]['authUsers'] ? $servers[$index]['authUsers'] : array();
             $newAuthUser = array(
                 array('truename'=>$authTrueName,'username'=>$authUserName)
             );
-            //TODO null 合并bug修复
+
             $authUsers = array_merge($oldAuthUsers,$newAuthUser);
             $servers[$index]['authUsers'] = $authUsers;
             $res = file_put_contents('../servers.json',json_encode($servers,JSON_UNESCAPED_UNICODE));
