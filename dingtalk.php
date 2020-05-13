@@ -16,9 +16,10 @@ $authRs = json_decode(requestGet($authUrl),true);
 
 if($authRs['errcode'] == 0){
     //请求成功
-    //测试无需继续往下执行 证明域名正常部署即可
+    //测试无需继续往下执行 证明域名正常部署并注册钉钉回调事件即可
     if($opt == 'test'){
-        ejson(200);
+        $callbackResult = _registerDingtalkCallback($config['token']);
+        ejson(200,$callbackResult);
     }
     //不是管理员
     if($authRs['is_sys'] != 1){
@@ -30,14 +31,14 @@ if($authRs['errcode'] == 0){
 
 
 ///////////////////////////业务逻辑
+///////////////////////////
 //返回所有服务器资源
 if($opt == 'listServer'){
     $servers = json_decode(file_get_contents('../servers.json'),true);
     ejson(200,$servers,'ok');
-}
-
-//添加服务器资源
-if($opt == 'addServer'){
+    
+} else if($opt == 'addServer'){
+    //添加服务器资源
     $server_ip = isset($_POST['server_ip']) ? addslashes(trim($_POST['server_ip'])) : '';
     $server_desc = isset($_POST['server_desc']) ? addslashes(trim($_POST['server_desc'])) : '';
     $server_port = isset($_POST['server_port']) ? addslashes(trim($_POST['server_port'])) : '';
@@ -126,8 +127,22 @@ if($opt == 'addServer'){
     } else {
         ejson(196,[],'添加授权员工连接失败');
     }
+} else if($opt == 'callback'){
+   //钉钉回调事件
+   
 } else {
     ejson(190,[],'非法操作');
+}
+
+function _registerDingtalkCallback($access_token = ''){
+    $registerCallbackUrl = 'https://oapi.dingtalk.com/call_back/register_call_back?access_token='.$access_token;
+    $postData = array(
+        "call_back_tag"=>["user_leave_org"],
+        "token"=>"123456",
+        "aes_key"=>"xxxxxxxxlvdhntotr3x9qhlbytb18zyz5zxxxxxxxxx",
+        "url"=>"http://".addslashes(trim($_SERVER['HOST_NAME']))."/dingtalk.php?opt=callback"
+    );
+    return requestPost($registerCallbackUrl,$postData);
 }
 
 /**
