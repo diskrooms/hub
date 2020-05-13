@@ -28,7 +28,6 @@ Page({
             that.setData({'show':true})
           } else {
             that.setData({'domain':res.data})
-            //console.log(res)
             //请求接口获取服务资源数据
             dd.getAuthCode({
                 success:function(authRes){
@@ -42,7 +41,7 @@ Page({
                       that.setData({'listData':serversRes.data.data})
                     },
                     fail: function(res) {
-                      console.log(res)
+                      //console.log(res)
                     }
                   });
                 },

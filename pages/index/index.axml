@@ -98,19 +98,21 @@
 <view class="iframe-content-wrapper page-wrapper chiller-theme toggled" a:if='{{showAuthUser}}'>
   <view id="sidebar" class="sidebar-wrapper">
     <view class="sidebar-content mCustomScrollbar _mCS_1 mCS-autoHide desktop mCS_no_scrollbar">
-      <view id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" style="max-height: none;" tabindex="0">
-        <view id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
-          <view id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" style="max-height: none;" tabindex="0">
-            <view id="mCSB_1_container" class="mCSB_container" style="position:relative; top:0; left:0;" dir="ltr">
-              <view id="toggle-sidebar" onTap="hiddenAuthUsers">
-                <view></view>
-                <view></view>
-                <view></view>
-              </view>
+      <view id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" style="max-height: none;">
+        <view id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;">
+          <view id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" style="max-height: none;">
+            <view id="mCSB_1_container" class="mCSB_container" style="position:relative; top:0; left:0;">
+              
               <view class="sidebar-brand">
                 <button type="button" class="btn btn-box-tool" id="add-authorization-user" onTap="showAddAuthUser"> 
-                  <view class="fa fa-plus">添加员工</view> 
+                  添加员工
                 </button>
+
+                <view id="toggle-sidebar" onTap="hiddenAuthUsers">
+                  <view></view>
+                  <view></view>
+                  <view></view>
+                </view>
               </view>
               <!--<view class="sidebar-search">
                   <view class="input-group">
