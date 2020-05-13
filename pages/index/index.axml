@@ -125,9 +125,9 @@
               <view class="sidebar-menu">
                 <view id="authorization-users">
                   <view class="header-menu"> <view>授权访问员工</view> </view>
-                  <li class="sidebar-dropdown" id="authorization-39">
+                  <!-- <li class="sidebar-dropdown" id="authorization-39">
                     <a href="javascript:void(0)"><i class="fa fa-user"></i><span class="username" >华定平-huadingping</span><span class="label label-danger delete-authorization" data-id="39">删除</span></a>
-                  </li>
+                  </li> -->
                 </view>
               </view>
               <!-- sidebar-menu  --> 
