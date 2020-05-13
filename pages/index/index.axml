@@ -126,7 +126,7 @@
                 <view id="authorization-users">
                   <view class="header-menu"> <view>授权访问员工</view> </view>
                   <li class="sidebar-dropdown" id="authorization-39">
-                    <a href="javascript:void(0)"><i class="fa fa-user"></i><span class="username" data-toggle="popover" data-placement="top" data-trigger="hover" title="甘特图" data-content="时间管理,简单高效">华定平-huadingping</span><span class="label label-danger delete-authorization" data-id="39">删除</span></a>
+                    <a href="javascript:void(0)"><i class="fa fa-user"></i><span class="username" >华定平-huadingping</span><span class="label label-danger delete-authorization" data-id="39">删除</span></a>
                   </li>
                 </view>
               </view>
