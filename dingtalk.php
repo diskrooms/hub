@@ -80,7 +80,7 @@ if($opt == 'addServer'){
     }
     $oldAuthUsers = $servers[$index]['authUsers'];
     ejson(196,$oldAuthUsers,'ok');
-
+    
 } else if($opt == 'delAuthorizationUser'){
     //删除授权员工
     
