@@ -1,34 +1,35 @@
 <?php
 define('HUB', '');
-$config = include '../conf.php';
+$config = include_once '../conf.php';
 $config = refreshToken($config);
 
 $opt = isset($_GET['opt']) ? addslashes(trim($_GET['opt'])) : '';       //操作
 $code = isset($_GET['code']) ? addslashes(trim($_GET['code'])) : '';    //小程序免登code码
 
-if(empty($opt) || empty($code)){
+if(empty($opt) || (empty($code) && $opt != 'callback')){
     ejson(199,[],'鉴权失败');
 }
 
-//用户鉴权
-$authUrl = 'https://oapi.dingtalk.com/user/getuserinfo?access_token='.$config['token'].'&code='.$code;
-$authRs = json_decode(requestGet($authUrl),true);
+//非回调情况下都需要用户鉴权
+if($opt != 'callback'){
+    $authUrl = 'https://oapi.dingtalk.com/user/getuserinfo?access_token='.$config['token'].'&code='.$code;
+    $authRs = json_decode(requestGet($authUrl),true);
 
-if($authRs['errcode'] == 0){
-    //请求成功
-    //测试无需继续往下执行 证明域名正常部署并注册钉钉回调事件即可
-    if($opt == 'test'){
-        $callbackResult = _registerDingtalkCallback($config['token']);
-        ejson(200,$callbackResult);
+    if($authRs['errcode'] == 0){
+        //请求成功
+        //测试无需继续往下执行 证明域名正常部署并注册钉钉回调事件即可
+        if($opt == 'test'){
+            $callbackResult = _registerDingtalkCallback($config['token']);
+            ejson(200,$callbackResult);
+        }
+        //不是管理员
+        if($authRs['is_sys'] != 1){
+            ejson(199);
+        }
+    } else {
+        ejson(198,[],$authRs['errmsg']);
     }
-    //不是管理员
-    if($authRs['is_sys'] != 1){
-        ejson(199);
-    }
-} else {
-    ejson(198,[],$authRs['errmsg']);
 }
-
 
 ///////////////////////////业务逻辑
 ///////////////////////////
@@ -128,8 +129,34 @@ if($opt == 'listServer'){
         ejson(196,[],'添加授权员工连接失败');
     }
 } else if($opt == 'callback'){
-   //钉钉回调事件
-   
+    //钉钉回调事件
+    include_once 'dingtalkCryptor.php';
+    $dingTalkCryptor = new DingtalkCrypt('123456', 'xxxxxxxxlvdhntotr3x9qhlbytb18zyz5zxxxxxxxxx', 'ding2a01bd7f2944946f35c2f4657eb6378f');
+
+    $signature = trim($_GET['signature']);
+    $timestamp = trim($_GET['timestamp']);
+    $nonce = trim($_GET['nonce']);
+    $encryptRaw = json_decode(stripslashes(file_get_contents('php://input')),true);
+    $encrypt = $encryptRaw['encrypt'];
+
+    $plainText = '';
+    $dingTalkCryptor->DecryptMsg($signature, $timestamp, $nonce, $encrypt,$plainText);
+    if($plainText == '{"EventType":"check_url"}'){
+        //返回加密success串
+        $plainText = 'success';
+        //$timeStamp = time();
+        //$nonce = getRandomStr(8);
+        $encryptMsg = '';
+        $dingTalkCryptor->EncryptMsg($plainText, $timestamp, $nonce, $encryptMsg);
+        header( 'Content-Type:application/json'); 
+        echo $encryptMsg;
+        
+        //$encryptObj = json_decode($encryptMsg,true);
+        //$dingTalkCryptor->DecryptMsg($encryptObj['msg_signature'], $timestamp, $nonce, $encryptObj['encrypt'],$xx);
+        //echo $xx;
+        exit();
+    }
+
 } else {
     ejson(190,[],'非法操作');
 }
@@ -144,7 +171,7 @@ function _registerDingtalkCallback($access_token = ''){
     );
     $postJson = json_encode($postData);
     //echo $postJson;
-    print_r(requestPost($registerCallbackUrl, $postJson, array('Accept:application/json','Content-Type:application/json')));
+    echo requestPost($registerCallbackUrl, $postJson, array('Content-Type:application/json'));
     exit();
 }
 
@@ -319,7 +346,7 @@ function requestPost($url = '', $data = array(), $header = array(), $timeout = 6
         } else {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         }
-        curl_setopt($ch, CURLOPT_PROXY, '127.0.0.1'); //代理服务器地址
+        curl_setopt($ch, CURLOPT_PROXY, '121.89.174.1'); //代理服务器地址
         curl_setopt($ch, CURLOPT_PROXYPORT,'8888'); 		//代理服务器端口
         //curl_setopt($ch, CURLOPT_SAFE_UPLOAD, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
