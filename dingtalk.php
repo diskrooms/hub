@@ -20,7 +20,7 @@ if($opt != 'callback'){
         //测试无需继续往下执行 证明域名正常部署并注册钉钉回调事件即可
         if($opt == 'test'){
             $callbackResult = _registerDingtalkCallback($config['token']);
-            ejson(200,$callbackResult);
+            ejson(200,json_decode($callbackResult,true));
         }
         //不是管理员
         if($authRs['is_sys'] != 1){
@@ -138,7 +138,7 @@ if($opt == 'listServer'){
     $nonce = trim($_GET['nonce']);
     $encryptRaw = json_decode(stripslashes(file_get_contents('php://input')),true);
     $encrypt = $encryptRaw['encrypt'];
-
+    //echo $encrypt;
     $plainText = '';
     $dingTalkCryptor->DecryptMsg($signature, $timestamp, $nonce, $encrypt,$plainText);
     if($plainText == '{"EventType":"check_url"}'){
@@ -150,8 +150,8 @@ if($opt == 'listServer'){
         $dingTalkCryptor->EncryptMsg($plainText, $timestamp, $nonce, $encryptMsg);
         header( 'Content-Type:application/json'); 
         echo $encryptMsg;
-        
         //$encryptObj = json_decode($encryptMsg,true);
+        //$xx = '';
         //$dingTalkCryptor->DecryptMsg($encryptObj['msg_signature'], $timestamp, $nonce, $encryptObj['encrypt'],$xx);
         //echo $xx;
         exit();
@@ -171,7 +171,7 @@ function _registerDingtalkCallback($access_token = ''){
     );
     $postJson = json_encode($postData);
     //echo $postJson;
-    echo requestPost($registerCallbackUrl, $postJson, array('Content-Type:application/json'));
+    return requestPost($registerCallbackUrl, $postJson, array('Content-Type:application/json'));
     //exit();
 }
 
@@ -213,7 +213,7 @@ function refreshToken($config){
                     'appkey'=>'".$config['appkey']."',
                     'appsecret'=>'".$config['appsecret']."'
                 );";
-        //file_put_contents('../conf.php',$CONF);
+        file_put_contents('../conf.php',$CONF);
     }
     return $config;
 }
